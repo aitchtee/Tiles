@@ -1,5 +1,5 @@
 .game-board {
-  margin: auto;
+  margin: 20px auto;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr 1fr 1fr 1fr;
@@ -11,7 +11,7 @@
 }
 
 .restartBtn {
-  margin-top: 30px;
+  margin-top: 20px;
   height: 30px;
 }
 /*# sourceMappingURL=App.css.map */
