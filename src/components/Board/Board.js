@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import Square from '../Square/Square';
 
 let colors = ['red', 'green', 'blue', 'yellow', 'orange', 'cyan', 'purple', 'lightgrey']
-colors.map(color => colors.push(color))
+colors.map(color => colors.push(color)) // full array of colors
 
-const shuffleArray = (array) => {
+const shuffleArray = (array) => { // randomly shuffle array function
   array.sort(() => Math.random() - 0.5);
   return array;
 };
 
-let shuffledColors = shuffleArray(colors);
+const shuffledColorsArray = shuffleArray(colors);
 
 class Board extends Component {
   constructor(props) {
@@ -21,6 +21,7 @@ class Board extends Component {
       tilesNumber: 15,
       clickCount: 0,
       clickedSquares: [],
+      rounds: 0,
     };
   };
 
@@ -38,34 +39,43 @@ class Board extends Component {
 
     let tilesNumber = this.state.tilesNumber;
 
+    let roundsCounter = this.state.rounds;
+
     this.setState({ squares: squares, clickCount: clickCount, clickedSquares: clickedSquares });
 
+    //check how many buttons clicked
     if (this.state.clickCount === 1) {
-      let a = this.state.clickedSquares[0].i;
-      let b = this.state.clickedSquares[1].i;
+      let firstTiles = this.state.clickedSquares[0].i;
+      let secondTiles = this.state.clickedSquares[1].i;
 
-      if (this.state.clickedSquares[0].bg === this.state.clickedSquares[1].bg) {
+      if (this.state.clickedSquares[0].bg === this.state.clickedSquares[1].bg && firstTiles !== secondTiles) {
+        // if matched => dec left Tiles number and set disabled
         tilesNumber -= 2;
-        disabledSquares[a] = true
-        disabledSquares[b] = true
-        this.setState({ isDisabled: disabledSquares })
+        disabledSquares[firstTiles] = true;
+        disabledSquares[secondTiles] = true;
+        this.setState({ isDisabled: disabledSquares });
       } else {
+        // if didn't match => flipped back after 1sec 
         setTimeout(() => {
-          squares[a] = null;
-          squares[b] = null;
-        }, 10);
-      }
-      this.setState({ squares: squares, clickCount: 0, clickedSquares: [], tilesNumber: tilesNumber })
+          squares[firstTiles] = null;
+          squares[secondTiles] = null;
+          this.setState({ squares: squares });
+        }, 500);
+      };
+      roundsCounter += 1;
+      this.setState({ clickCount: 0, clickedSquares: [], tilesNumber: tilesNumber, rounds: roundsCounter });
 
+      // when there is no tiles left
       if (this.state.tilesNumber === 1) {
-        setTimeout(() => alert('You win'), 100)
-      }
+        setTimeout(() => alert(`You win in ${this.state.rounds} rounds!`), 100);
+      };
     };
   };
 
   renderSquare(i, bg) {
     return (
       <Square
+        key={i}
         value={this.state.squares[i]}
         onClick={() => this.handleClick(i, bg)}
         tilesLeft={this.state.tilesNumber}
@@ -74,9 +84,20 @@ class Board extends Component {
     );
   };
 
+  restart() {
+    window.location.reload()
+  }
+
   render() {
+    const { rounds } = this.state;
     return (
-      shuffledColors.map((color, i) => (this.renderSquare(i, color)))
+      <>
+        {
+          shuffledColorsArray.map((color, i) => (this.renderSquare(i, color)))
+        }
+        <p>rounds: {rounds} </p>
+        <button className='restartBtn' onClick={() => this.restart()}>restart</button>
+      </>
     );
   };
 };
