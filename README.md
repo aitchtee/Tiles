@@ -1,3 +1,7 @@
+This project is the simple tile-based game.
+The gameplay is the sequence of rounds. In each round the user should select 2 tiles with the same color to make them disappear. If he selects 2 tiles with different colors then they are flipped to "closed" state, and the user proceeds with the next round. The game is considered to be over when all of the tiles are opened. 
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
